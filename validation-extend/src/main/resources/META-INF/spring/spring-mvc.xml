@@ -15,7 +15,7 @@
     <context:property-placeholder
         location="classpath*:/META-INF/spring/*.properties" />
 
-    <mvc:annotation-driven>
+    <mvc:annotation-driven validator="validator">
         <mvc:argument-resolvers>
             <bean
                 class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
@@ -124,6 +124,13 @@
     <!-- Setting PathMatcher. -->
     <bean id="pathMatcher" class="org.springframework.util.AntPathMatcher">
         <property name="trimTokens" value="false" />
+    </bean>
+    
+    <!-- Extend LocalValidatorFactoryBean. -->
+    <bean id="validator" class="com.example.core.validation.beanvalidation.ViolationOrderedLocalValidatorFactoryBean">
+    	<property name="violationOrderStrategy">
+    		<bean class="com.example.core.validation.beanvalidation.strategy.AnnotationViolationOrderStrategy" />
+    	</property>
     </bean>
 
 </beans>
