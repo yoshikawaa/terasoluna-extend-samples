@@ -10,18 +10,18 @@ import com.example.core.validation.beanvalidation.ViolationOrderedLocalValidator
 /**
  * strategy class of {@link ViolationOrderedLocalValidatorFactoryBean}.
  */
-public class AnnotationViolationOrderStrategy implements Comparator<ConstraintViolation<Object>> {
+public class AnnotationViolationOrderStrategy implements Comparator<ConstraintViolation<?>> {
 
     /*
      * (非 Javadoc)
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     @Override
-    public int compare(ConstraintViolation<Object> left, ConstraintViolation<Object> right) {
+    public int compare(ConstraintViolation<?> left, ConstraintViolation<?> right) {
         String l = getPropertyPathString(left);
         String r = getPropertyPathString(right);
 
-        int annotatedOrder = getAnnotation(left, l).compareTo(getAnnotation(right, r));
+        int annotatedOrder = getAnnotatedOrder(left, l).compareTo(getAnnotatedOrder(right, r));
         return (annotatedOrder == 0) ? l.compareTo(r) : annotatedOrder;
     }
 
@@ -40,7 +40,7 @@ public class AnnotationViolationOrderStrategy implements Comparator<ConstraintVi
      * @param path property path
      * @return annotated violation order
      */
-    protected Integer getAnnotation(ConstraintViolation<Object> violation, String path) {
+    protected Integer getAnnotatedOrder(ConstraintViolation<?> violation, String path) {
         ViolationOrder annotation = null;
         try {
             annotation = violation.getRootBeanClass().getDeclaredField(path).getAnnotation(ViolationOrder.class);
