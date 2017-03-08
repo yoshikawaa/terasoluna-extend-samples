@@ -16,7 +16,7 @@ import org.springframework.core.annotation.AliasFor;
 @Documented
 public @interface ViolationOrder {
     /**
-     * @return alias　for {@link #order()}
+     * @return alias for {@link #order()}
      */
     @AliasFor("order")
     int value() default Integer.MAX_VALUE;

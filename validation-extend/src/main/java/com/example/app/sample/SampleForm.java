@@ -5,6 +5,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.ScriptAssert;
 
 import com.example.core.validation.beanvalidation.annotation.ViolationOrder;
 
@@ -13,15 +14,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@ViolationOrder(1)
+@ScriptAssert(lang = "javascript", script = "_this.name.equals(_this.email)")
 public class SampleForm {
 
-    @ViolationOrder(1)
+    @ViolationOrder(2)
     @NotEmpty
     @Size(min = 3, max = 10)
     @Pattern(regexp = "^[a-zA-Z0-9]+$")
     private String name;
 
-    @ViolationOrder(2)
     @NotEmpty
     @Email
     private String email;

@@ -1,8 +1,11 @@
 package com.example.core.validation.beanvalidation.strategy;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.Comparator;
 
 import javax.validation.ConstraintViolation;
+
+import org.springframework.util.StringUtils;
 
 import com.example.core.validation.beanvalidation.annotation.ViolationOrder;
 import com.example.core.validation.beanvalidation.ViolationOrderedLocalValidatorFactoryBean;
@@ -41,12 +44,18 @@ public class AnnotationViolationOrderStrategy implements Comparator<ConstraintVi
      * @return annotated violation order
      */
     protected Integer getAnnotatedOrder(ConstraintViolation<?> violation, String path) {
-        ViolationOrder annotation = null;
+        AnnotatedElement element = null;
         try {
-            annotation = violation.getRootBeanClass().getDeclaredField(path).getAnnotation(ViolationOrder.class);
+            element = (StringUtils.isEmpty(path)) ? violation.getRootBeanClass() : violation.getRootBeanClass().getDeclaredField(path);
         } catch (NoSuchFieldException | SecurityException e1) {
             // will not reach here.
         }
-        return (annotation == null) ? Integer.MAX_VALUE : Math.min(annotation.value(), annotation.order());
+
+        if (element.isAnnotationPresent(ViolationOrder.class)) {
+            ViolationOrder annotation = element.getAnnotation(ViolationOrder.class);
+            return Math.min(annotation.value(), annotation.order());
+        } else {
+            return Integer.MAX_VALUE;
+        }
     }
 }

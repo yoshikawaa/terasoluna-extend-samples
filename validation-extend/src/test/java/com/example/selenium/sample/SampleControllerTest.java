@@ -39,11 +39,11 @@ public class SampleControllerTest {
 
     @Test
     public void testViolationOrder() {
-        List<String> expected = Arrays.asList("name", "email");
+        List<String> expected = Arrays.asList("\"\"", "\"name\"", "\"email\"");
         int validate = 10;
 
-        for (int i = 0 ; i < validate ; i++) {
-            setText(id("name"), "a");
+        for (int i = 0; i < validate; i++) {
+            setText(id("name"), "#");
             setText(id("email"), "a");
             driver.findElement(id("submit")).click();
 
@@ -51,7 +51,7 @@ public class SampleControllerTest {
             assertThat(error, stringContainsInOrder(expected));
         }
     }
-    
+
     private void setText(By by, String text) {
         WebElement e = driver.findElement(by);
         e.clear();
